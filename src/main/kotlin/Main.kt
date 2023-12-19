@@ -15,13 +15,28 @@ val datos = Datos(
 )
 
 fun main() {
-    println("Hello World!")
+    val scan = Scanner(System.`in`)
+    var total = 0
+    do {
+        val seguir = menus(scan)
+    } while (seguir)
+
 }
-fun menus(scan: Scanner) {
+fun menus(scan: Scanner):Boolean {
     val billete = billetes(scan)
     if (billete != 4321) {
         val zona = zona(scan)
         println("Ha escollit la opcio:$billete, $zona")
+        println("Vols el tiquet[S/N]")
+        var input:String
+        do {
+            input = scan.next()
+        }while (input == "s" || input == "S" || input == "n" || input == "N")
+
+        when (input) {
+            "s","S" -> return true
+            "n","N" -> return false
+        }
     }
     else {
         println("Maquina aturada")
@@ -31,34 +46,32 @@ fun menus(scan: Scanner) {
             val linea = scan.nextLine()
         } while (linea != "4321")
     }
+    return true
 }
 
-fun  calcularPrecio(billete:Int,zona:Int,precioBilletes:Array<Float>,precioZona:Array<Float>) {
+fun  calcularPrecio() {
 
 }
 fun billetes(scan:Scanner):Int {
     println("--------------------------------------------------------------------------\n" +
-            "Quin billet desitja adquirir?\n" +
-            "1 - Billet senzill\n" +
-            "2 - TCasual\n" +
-            "3 - TUsual\n" +
-            "4 - TFamiliar\n" +
-            "5 - TJove")
+            "Quin billet desitja adquirir?")
+    for (i in datos.billetesNombres.indices) println("${i + 1} - ${datos.billetesNombres[i]}")
     var billete:Int
     do {
-        billete = comprobarInt(scan, "Esa no es una opción valida")
-    } while(billete in 1..4 || billete == 4321)
+        billete = comprobarInt(scan, "Esa no es una opción valida") - 1
+    } while(billete in 1 until datos.billetesNombres.size || billete == 4321)
 
     return billete
 }
 
 fun zona(scan:Scanner):Int {
-    println("Quina  zona vol viatjar?\n1\n2\n3")
+    println("Quina  zona vol viatjar?")
+    for (i in datos.zonas) println(i)
 
     var zona:Int
     do {
-        zona = comprobarInt(scan, "Esa no es una opción valida")
-    } while(zona in 1..3)
+        zona = comprobarInt(scan, "Esa no es una opción valida") - 1
+    } while(zona in datos.zonas)
 
     return zona
 }
