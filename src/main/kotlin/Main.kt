@@ -32,9 +32,19 @@ fun menus(scan: Scanner) {
         } while (linea != "4321")
     }
 }
-
-fun  calcularPrecio(billete:Int,zona:Int,precioBilletes:Array<Float>,precioZona:Array<Float>) {
-
+fun calcularPrecio(billete:Int,zona:Int,precioBilletes:Array<Float>,precioZona:Array<Float>):Float {
+    var precio = 0f
+    var numeroBillete = 1
+    var found = false
+    while (numeroBillete <= 5 && !found) {
+        if (billete == numeroBillete) {
+            precio = precioBilletes[numeroBillete-1]
+            found = true
+        }
+        numeroBillete++
+    }
+    precio += precioZona[zona-1]
+    return precio
 }
 fun billetes(scan:Scanner):Int {
     println("--------------------------------------------------------------------------\n" +
