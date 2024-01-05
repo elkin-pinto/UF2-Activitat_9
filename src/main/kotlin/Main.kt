@@ -1,19 +1,34 @@
 package org.example
+
+import org.junit.jupiter.api.Assertions
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
 
-data class Datos (
-    var billetesNombres:Array <String>,
+
+/**
+ *  @author David Pinto
+ *  @author Adria Gordillo
+ *  @author Omar Zouaoui
+ *
+ *  @version 1.9.0
+ */
+
+/**
+ * Data class que almacena la información de los billetes y zonas disponibles, así como los precios y el efectivo aceptado.
+ *
+ * @property billetesNombres Nombres de los tipos de billetes disponibles.
+ * @property billetesPrecios Precios correspondientes a los tipos de billetes.
+ * @property zonas Zonas disponibles para viajar.
+ * @property zonasPrecios Precios correspondientes a las zonas.
+ * @property efectivoAceptado Valores de efectivo aceptados por la máquina.
+ */
+data class Datos(
+    var billetesNombres: Array<String>,
     var billetesPrecios: Array<Float>,
     var zonas: Array<Int>,
     var zonasPrecios: Array<Float>,
     var efectivoAceptado: Array<Float>
-)
-
-data class BilletesZonas (
-    var billete:Int,
-    var zona:Int
 )
 
 val datos = Datos(
@@ -24,17 +39,45 @@ val datos = Datos(
     arrayOf(0.05f,0.1f,0.2f,0.5f,1f,2f,5f,10f,20f,50f)
 )
 
+/**
+ * Data class que representa la combinación de un billete y una zona.
+ *
+ * @property billete Tipo de billete.
+ * @property zona Zona correspondiente al billete.
+ */
+data class BilletesZonas(
+    var billete: Int,
+    var zona: Int
+)
+
+/**
+ * Función principal que controla la lógica del programa.
+ */
 fun main() {
     val scan = Scanner(System.`in`)
     while (true) {
-        val total = ArrayList<BilletesZonas> ()
+        val total = ArrayList<BilletesZonas>()
         do {
-            val seguir = menus(scan,total)
+            val seguir = menus(scan, total)
         } while (seguir)
-        pago(scan,total)
+        pago(scan, total)
         tiquet(scan, total)
     }
 }
+
+
+/**
+ * Interactua con el usuario miestras llama a otras funciones y las relaciona
+ *
+ * @param scan un scanner
+ * @param total un array que guarda el numero de billete y zona selecionado por el usuario
+ *
+ * @see billetes muestra menu de billetes y hace que elijan uno
+ * @see zona muestra las zonas y hace que elijan una
+ * @see calcularPrecio calcula el precio del billete con la zona
+ *
+ * @return retorna un bollean
+ */
 fun menus(scan: Scanner, total:ArrayList<BilletesZonas>):Boolean {
     val billete = billetes(scan)
     if (billete != 4321) {
@@ -64,30 +107,13 @@ fun menus(scan: Scanner, total:ArrayList<BilletesZonas>):Boolean {
     return true
 }
 
-/*
-fun calcularPrecio(billete:Int,zona:Int,precioBilletes:Array<Float>,precioZona:Array<Float>):Float {
-    var precio = 0f
-    var numeroBillete = 1
-    var found = false
-    while (numeroBillete <= 5 && !found) {
-        if (billete == numeroBillete) {
-            precio = precioBilletes[numeroBillete-1]
-            found = true
-        }
-        numeroBillete++
-    }
-    precio += precioZona[zona-1]
-    return precio
-}
-
-*/
-
-fun calcularPrecio(compra:BilletesZonas):Float {
-
-    val precio:Float = datos.billetesPrecios[compra.billete] * datos.zonasPrecios[compra.zona]
-    return precio
-}
-
+/**
+ * Muestra los billetes que hay y te deja elegir uno de ellos
+ *
+ * @param scan un scanner
+ *
+ * @return retorna un Int
+ */
 fun billetes(scan:Scanner):Int {
     println("- - - - - - - - - - - - - - - - - - - -\n" +
             "Quin billet desitja adquirir?")
@@ -100,6 +126,13 @@ fun billetes(scan:Scanner):Int {
     return billete
 }
 
+/**
+ * Muestra las zonas que hay y te deja elegir una de ellas
+ *
+ * @param scan un scanner
+ *
+ * @return retorna un Int
+ */
 fun zona(scan:Scanner):Int {
     println("Quina  zona vol viatjar?")
     for (i in datos.zonas) println(i)
@@ -111,6 +144,15 @@ fun zona(scan:Scanner):Int {
 
     return zona - 1
 }
+
+/**
+ * Se asegura que el input del usuario sea un int
+ *
+ * @param scan un scanner
+ * @param err mensaje de error
+ *
+ * @return retorna un Int
+ */
 fun comprobarInt(scan:Scanner , err:String):Int {
     while (!scan.hasNextInt()) {
         scan.nextLine()
@@ -120,18 +162,44 @@ fun comprobarInt(scan:Scanner , err:String):Int {
 
 }
 
-fun precioTotal(total:ArrayList<BilletesZonas>):Float {
+
+
+/**
+ * Función que calcula el precio de un billete en una zona específica.
+ *
+ * @param compra Combinación de billete y zona seleccionados.
+ * @return Precio del billete para esa zona.
+ */
+fun calcularPrecio(compra: BilletesZonas): Float {
+    val precio: Float = datos.billetesPrecios[compra.billete] * datos.zonasPrecios[compra.zona]
+    return precio
+}
+
+/**
+ * Calcula el precio total de la compra.
+ *
+ * @param total Lista de billetes y zonas seleccionados.
+ * @return Precio total de la compra.
+ */
+fun precioTotal(total: ArrayList<BilletesZonas>): Float {
     var precio = 0f
     for (i in total) {
         precio += datos.billetesPrecios[i.billete] * datos.zonasPrecios[i.zona]
     }
     return precio
 }
-fun pago(scan: Scanner,total:ArrayList<BilletesZonas>) {
+
+/**
+ * Realiza el proceso de pago.
+ *
+ * @param scan Scanner para leer la entrada del usuario.
+ * @param total Lista de billetes y zonas seleccionados.
+ */
+fun pago(scan: Scanner, total: ArrayList<BilletesZonas>) {
     var restante = redondearFloat(precioTotal(total))
     scan.nextLine()
 
-    println("Ha comprat ${total.size} billetes, ha de pagar ${String.format("%.2f",restante)}€")
+    println("Ha comprat ${total.size} billetes, ha de pagar ${String.format("%.2f", restante)}€")
     while (restante > 0f) {
         var efectivoIntroducido = 0f
         println("Introdueixi monedes o bitllets vàlids de EURO?")
@@ -139,23 +207,36 @@ fun pago(scan: Scanner,total:ArrayList<BilletesZonas>) {
         else scan.nextLine()
         if (efectivoIntroducido !in datos.efectivoAceptado) efectivoIntroducido = 0f
         restante -= efectivoIntroducido
-        if (restante > 0f) println("Ha introduit: ${String.format("%.2f",efectivoIntroducido)}€, li resta por pagar ${String.format("%.2f",restante)}€")
-        else println("Reculli el seu billet i el se canvi: ${String.format("%.2f",restante * -1f)}€")
+        if (restante > 0f) println("Ha introduit: ${String.format("%.2f", efectivoIntroducido)}€, li resta por pagar ${String.format("%.2f", restante)}€")
+        else println("Reculli el seu billet i el se canvi: ${String.format("%.2f", restante * -1f)}€")
     }
 }
 
-fun redondearFloat(float:Float):Float {
+/**
+ * Redondea un número de tipo Float a dos decimales.
+ *
+ * @param float Número a redondear.
+ * @return Número redondeado a dos decimales.
+ */
+fun redondearFloat(float: Float): Float {
     return (float * 100).roundToInt() / 100f
 }
-fun tiquet(scan: Scanner,total:ArrayList<BilletesZonas>) {
+
+/**
+ * Genera el tiquet de la compra si se solicita.
+ *
+ * @param scan Scanner para leer la entrada del usuario.
+ * @param total Lista de billetes y zonas seleccionados.
+ */
+fun tiquet(scan: Scanner, total: ArrayList<BilletesZonas>) {
     println("Vols el tiquet[S,N]")
-    var input:String
+    var input: String
     do {
         input = scan.next()
-    }while (input != "s" && input != "S" && input != "n" && input != "N")
+    } while (input != "s" && input != "S" && input != "n" && input != "N")
 
     when (input) {
-        "s","S" -> {
+        "s", "S" -> {
             println("_____TIQUET_____")
             for (i in total) println("${datos.billetesNombres[i.billete]} zona ${datos.zonas[i.zona]} - Preu: ${String.format("%.2f", calcularPrecio(i))}")
             println("---------------------\n" +
