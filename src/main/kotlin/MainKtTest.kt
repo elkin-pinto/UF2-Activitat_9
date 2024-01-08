@@ -1,12 +1,9 @@
-import com.sun.tools.javac.Main
 import org.example.BilletesZonas
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
-import org.junit.jupiter.api.Assertions.*
-
 class MainKtTest {
-
     @Test
     fun calcularPrecio() {
         var RESULT = 14.896875
@@ -33,4 +30,4 @@ class MainKtTest {
 
         // El resto de funciones no se puede hacer test porque no retornan nada o son un bucle que devuelven el input del usuario hasta que elija una opcion valida.
     }
-}
+    }
