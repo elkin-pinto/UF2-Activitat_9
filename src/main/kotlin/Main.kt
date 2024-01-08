@@ -1,6 +1,5 @@
 package org.example
 
-import org.junit.jupiter.api.Assertions
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
@@ -84,7 +83,7 @@ fun menus(scan: Scanner, total:ArrayList<BilletesZonas>):Boolean {
         val zona = zona(scan)
         total += BilletesZonas(billete,zona)
         println("Ha escollit la opcio:${datos.billetesNombres[billete]}, zona ${datos.zonas[zona]}")
-        println("El preu del billet es ${String.format("%.2f",calcularPrecio(BilletesZonas(billete,zona)))}")
+        println("El preu del billet es ${String.format("%.2f",calcularPrecio(BilletesZonas(billete,zona)))}€")
         println("Vols seguir comprant?[S/N]")
         var input:String
         do {
